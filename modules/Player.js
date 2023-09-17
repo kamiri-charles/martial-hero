@@ -1,5 +1,12 @@
 import { game_utils, player_utils } from "../utils.js";
 
+const player_state = {
+  IDLE_RIGHT: "idle_right",
+  IDLE_LEFT: "idle_left",
+  WALKING_RIGHT: "walking_right",
+  WALKING_LEFT: "walking_left",
+};
+
 export default class Player {
     constructor(canvas) {
         this.canvas = canvas;
@@ -14,15 +21,27 @@ export default class Player {
         this.y = this.canvas.height - this.height - game_utils.surface;
         this.frame = 70;
         this.counter = 0;
+
+        this.isFacingLeft = true;
     };
 
     draw(context) {
-        context.beginPath();
-        context.strokeStyle = 'black';
-        //context.strokeRect(this.x, this.y, this.width, this.height);
-        context.drawImage(this.idle_sprite, this.frame, 68, this.sprite_width, this.sprite_height, this.x, this.y, this.width, this.height);
-        context.closePath();
+      context.beginPath();
+      context.strokeStyle = "black";
 
+      // Check the player's facing direction and apply scaling if facing left
+      if (this.isFacingLeft) {
+        context.save(); // Save the current canvas state
+        context.scale(-1, 1); // Flip horizontally
+        const flippedX = -this.x - this.width; // Adjust the x-coordinate for flipping
+        context.drawImage(this.idle_sprite, this.frame, 68, this.sprite_width, this.sprite_height, flippedX, this.y, this.width, this.height);
+        context.restore(); // Restore the canvas state
+
+      } else {
+        context.drawImage(this.idle_sprite, this.frame, 68, this.sprite_width, this.sprite_height, this.x, this.y, this.width, this.height);
+      }
+
+      context.closePath();
     }
 
     update() {
