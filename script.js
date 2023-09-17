@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Player controls
 	window.addEventListener('keydown', e => {
 		if (e.code == 'Space') console.log('Space')
-		if (e.code == 'ArrowRight') player.mov_x = 5
-		if (e.code == 'ArrowLeft') player.mov_x  = -5
+		if (e.code == 'ArrowRight') player.mov_x = player.speed;
+		if (e.code == 'ArrowLeft') player.mov_x  = -player.speed;
 		if (e.code == 'ArrowUp') console.log('Up')
 	});
 

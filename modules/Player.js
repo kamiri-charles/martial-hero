@@ -19,8 +19,11 @@ export default class Player {
         this.x = 100;
         this.y = this.canvas.height - this.height - game_utils.surface;
         this.frame = 70;
+        this.frame_speed = 5;
         this.counter = 0;
+        this.speed = 10
         
+
         this.state = player_states.IDLE_RIGHT;
     };
     
@@ -33,11 +36,13 @@ export default class Player {
             case player_states.IDLE_RIGHT:
             case player_states.IDLE_LEFT:
                 this.idle_sprite.src = "../sprites/Idle.png";
+                this.frame_speed = 5;
                 break;
 
             case player_states.RUNNING_RIGHT:
             case player_states.RUNNING_LEFT:
                 this.idle_sprite.src = "../sprites/Run.png";
+                this.frame_speed = 3;
                 break;
 
             default:
@@ -63,7 +68,7 @@ export default class Player {
         this.counter++;
         // Handle horizontal movement
         this.x += this.mov_x;
-        if (this.counter % 5 == 0) this.frame += 200;
+        if (this.counter % this.frame_speed == 0) this.frame += 200;
         
         if (this.frame > 1520) this.frame = 70
 
@@ -79,7 +84,7 @@ export default class Player {
                 this.state = player_states.IDLE_LEFT;
             }
         }
-        
+
         
         // Boundaries
         /* if (this.x <= 0) this.x = 0;
