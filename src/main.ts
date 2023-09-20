@@ -1,12 +1,10 @@
-import Game from "./modules/Game.js";
-import Player from "./modules/Player.js";
-import { game_utils } from "./utils.js";
+import Game from "./modules/Game";
+import Player from "./modules/Player";
 
 document.addEventListener('DOMContentLoaded', () => {
-	/** @type {HTMLCanvasElement} */
-	const canvas = document.getElementById('canvas');
-	const ctx = canvas.getContext('2d');
 
+	const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+	const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 	
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
@@ -36,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	const animate = () => {
 		ctx.fillStyle = "skyblue";
-    	ctx.fillRect(0, 0, canvas.width, (canvas.height - game_utils.surface));
+    	ctx.fillRect(0, 0, canvas.width, (canvas.height - 100));
 		player.update();
 		player.draw(ctx);
 		
