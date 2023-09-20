@@ -1,4 +1,6 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
 
 module.exports = {
   entry: "./src/main.ts", // Update with your entry file path
@@ -23,4 +25,10 @@ module.exports = {
       directory: path.join(__dirname, "dist"), // Specify the content base directory
     },
   },
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html", // Path to your HTML template
+    }),
+  ],
 };

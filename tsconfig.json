@@ -4,8 +4,6 @@
     "target": "ES6",
     "rootDir": "./src",
     "outDir": "./dist",
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
     "noImplicitAny": true,
   },
   "include": [

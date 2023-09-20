@@ -44,24 +44,24 @@ export default class Player {
     switch (this.state) {
       case player_states.IDLE_RIGHT:
       case player_states.IDLE_LEFT:
-        this.idle_sprite.src = "../sprites/Idle.png";
+        this.idle_sprite.src = "../assets/sprites/Idle.png";
         this.frame_speed = 5;
         break;
 
       case player_states.SPRINT_RIGHT:
       case player_states.SPRINT_LEFT:
-        this.idle_sprite.src = "../sprites/Run.png";
+        this.idle_sprite.src = "../assets/sprites/Run.png";
         this.frame_speed = 3;
         break;
 
       case player_states.JUMP_RIGHT:
       case player_states.JUMP_LEFT:
-        this.idle_sprite.src = "../sprites/Jump.png";
+        this.idle_sprite.src = "../assets/sprites/Jump.png";
         this.frame_speed = 5;
         break;
 
       default:
-        this.idle_sprite.src = "../sprites/Idle.png";
+        this.idle_sprite.src = "../assets/sprites/Idle.png";
     }
 
     // Check the player's facing direction and apply scaling if facing left

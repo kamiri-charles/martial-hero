@@ -1,4 +1,3 @@
-
 export default class Game {
     canvas: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
