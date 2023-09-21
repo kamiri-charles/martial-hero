@@ -28,8 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (e.code == 'ArrowLeft') player.mov_x  = 0
 		if (e.code == 'ArrowUp') console.log('Up')
 	});
-
-
 	
 	
 	const animate = () => {
