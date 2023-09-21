@@ -9,7 +9,7 @@
   },
   "include": [
     "./src/**/*",
-    "./images.d.ts"
+    "./images.d.ts",
   ],
   "exclude": [
     "./node_modules",

@@ -3,7 +3,10 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 
 module.exports = {
-  entry: "./src/main.ts", // Update with your entry file path
+  entry: [
+    "./src/main.ts",
+    "./src/styles.css"
+  ],
   output: {
     filename: "bundle.js", // Name of the output bundle file
     path: path.resolve(__dirname, "dist"), // Output directory
@@ -29,6 +32,13 @@ module.exports = {
           },
         ]
       },
+
+      // CSS loader
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+
     ],
   },
 
