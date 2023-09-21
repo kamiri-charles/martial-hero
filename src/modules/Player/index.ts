@@ -2,16 +2,14 @@ import { player_states } from './player_state';
 import IdleSprite from '../../assets/sprites/Idle.png';
 import RunSprite from '../../assets/sprites/Run.png';
 
-
-
 export default class Player {
 	canvas: HTMLCanvasElement;
 	mov_x: number;
 	sprite: HTMLImageElement;
 	sprite_width: number;
 	sprite_height: number;
-	width: any;
-	height: any;
+	width: number;
+	height: number;
 	x: number;
 	y: number;
 	frame: number;
