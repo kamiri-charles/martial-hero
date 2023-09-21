@@ -1,35 +1,24 @@
-name: Deploy to GitHub Pages
-
+# Deploy to gh-pages on commit
+name: Deploy
 on:
   push:
     branches:
       - master
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build App
-        run: npm run build
-
-      - name: Deploy to gh-pages
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "charleskamiri6@gmail.com"
-          git checkout --orphan gh-pages
-          git --work-tree=dist add --all
-          git --work-tree=dist commit -m "Deploy to GitHub Pages"
-          git push origin HEAD:gh-pages --force
-
+      jobs:
+        deploy:
+          runs-on: ubuntu-latest
+          steps:
+            - name: Checkout
+            uses: actions/checkout@v1
+            - name: Install dependencies
+            run: npm install
+            - name: Build
+            run: npm run build
+            - name: Deploy
+            uses: JamesIves/github-pages-deploy-action@releases/v3
+            with:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              BRANCH: gh-pages
+              FOLDER: dist
+              
+              
