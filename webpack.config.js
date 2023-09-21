@@ -15,8 +15,23 @@ module.exports = {
         use: "ts-loader", // Use ts-loader to compile TypeScript
         exclude: /node_modules/,
       },
+      
+      // File loader for supporting images, for example, in CSS files.
+      {
+        test: /\.(jpg|png|gif|svg|pdf|ico)$/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "[path][name]-[hash:8].[ext]",
+              outputPath: "images/",
+            },
+          },
+        ]
+      },
     ],
   },
+
   resolve: {
     extensions: [".ts", ".js"], // Resolve these extensions
   },
@@ -25,7 +40,7 @@ module.exports = {
       directory: path.join(__dirname, "dist"), // Specify the content base directory
     },
   },
-
+  
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html", // Path to your HTML template

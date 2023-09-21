@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.3",
     "ts-loader": "^9.4.4",
     "typescript": "^5.2.2",
