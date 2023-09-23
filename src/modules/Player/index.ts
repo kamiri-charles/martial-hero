@@ -16,8 +16,11 @@ export default class Player {
 	frame_speed: number;
 	counter: number;
 	speed: number;
-	is_jumping: boolean;
 	state: string;
+	jump_height: number;
+	jump_offset: number;
+	j_offset: number;
+	is_jumping: boolean;
 	
 	
 	constructor(canvas: HTMLCanvasElement) {
@@ -34,6 +37,11 @@ export default class Player {
 		this.frame_speed = 5;
 		this.counter = 0;
 		this.speed = 10;
+
+		// Jump variables
+		this.jump_height = 50;
+		this.jump_offset = 10;
+		this.j_offset = 10;
 		this.is_jumping = false;
 		
 		this.state = player_states.IDLE_RIGHT;
@@ -42,6 +50,16 @@ export default class Player {
 	set_state(state: string) {
 		this.state = state;
 	};
+
+	on_ground() {
+		return this.y >= this.canvas.height - this.height - 100;
+	}
+
+	_jump() {
+		if (this.on_ground) {
+			this.is_jumping = true;
+		}
+	}
 	
 	draw(context: CanvasRenderingContext2D) {
 		context.beginPath();
@@ -67,6 +85,14 @@ export default class Player {
 			case player_states.SPRINT_LEFT:
 				this.sprite.src = RunSprite;
 				this.mov_x = -this.speed;
+				break;
+
+			case player_states.JUMP_LEFT:
+				this._jump();
+				break;
+
+			case player_states.JUMP_RIGHT:
+				this._jump();
 				break;
 
 			default:
@@ -98,13 +124,29 @@ export default class Player {
 		if (this.counter % this.frame_speed == 0) this.frame += 200;
 		
 		if (this.frame > 1520) this.frame = 70;
+
+
+		if (!this.on_ground()) {
+			console.log("Player is not on ground!");
+			this.y += 2;
+		}
+
+
+		// Vertical movement
+		if (this.is_jumping) {
+			this.y -= this.jump_offset;
+			this.jump_offset -= 0.5;
+
+			if (this.jump_offset <= 0) {
+				this.is_jumping = false;
+				this.jump_offset = this.j_offset;
+			};
+		};
+
+
 		
 		// Boundaries
 		/* if (this.x <= 0) this.x = 0;
 		if (this.x >= (this.canvas.width - player_utils.width)) this.x = this.canvas.width - player_utils.width; */
-	}
-	
-	jump() {
-		this.y -= 1;
 	}
 }
