@@ -1,6 +1,6 @@
 import { player_states } from './player_states';
-import IdleSprite from '../../assets/sprites/Idle.png';
-import RunSprite from '../../assets/sprites/Run.png';
+import { player_sprites } from './sprite_meta';
+
 
 export default class Player {
 	canvas: HTMLCanvasElement;
@@ -21,28 +21,45 @@ export default class Player {
 	jump_offset: number;
 	j_offset: number;
 	is_jumping: boolean;
+	gravity: number;
+	current_sprite: {
+		name: string;
+		image: string;
+		frames: number;
+		x_offset: number;
+		y_offset: number;
+		first_frame: number;
+		last_frame: number;
+	};
 	
 	
 	constructor(canvas: HTMLCanvasElement) {
 		this.canvas = canvas;
+		this.counter = 0;
 		this.mov_x = 0;
+		
+		// Sprite animation variables
+		this.current_sprite = player_sprites["IDLE"];
 		this.sprite = new Image();
+		this.sprite.src = this.current_sprite.image;
+		this.frame = this.current_sprite.first_frame;
+		this.frame_speed = 5;
 		this.sprite_width = 50;
 		this.sprite_height = 55;
 		this.width = this.sprite_width;
 		this.height = this.sprite_height;
+
+		// Position variables
 		this.x = 100;
-		this.y = this.canvas.height - this.height - 100;
-		this.frame = 70;
-		this.frame_speed = 5;
-		this.counter = 0;
+    	this.y = this.canvas.height - this.height - 100;
 		this.speed = 10;
 
 		// Jump variables
-		this.jump_height = 50;
+		this.jump_height = 20;
 		this.jump_offset = 10;
-		this.j_offset = 10;
+		this.j_offset = 10; // Should be equal to jump_offset
 		this.is_jumping = false;
+		this.gravity = 1;
 		
 		this.state = player_states.IDLE_RIGHT;
 	}
@@ -56,6 +73,7 @@ export default class Player {
 	}
 
 	_jump() {
+		this.speed = 7;
 		if (this.on_ground) {
 			this.is_jumping = true;
 		}
@@ -68,35 +86,37 @@ export default class Player {
 		// Set the player's sprite and horizontal movement based on the current state
 		switch (this.state) {
 			case player_states.IDLE_RIGHT:
-				this.sprite.src = IdleSprite;
+				this.current_sprite = player_sprites["IDLE"];
 				this.mov_x = 0;
 				break;
 
 			case player_states.IDLE_LEFT:
-				this.sprite.src = IdleSprite;
+				this.current_sprite = player_sprites["IDLE"];
 				this.mov_x = 0;
 				break;
 
 			case player_states.SPRINT_RIGHT:
-				this.sprite.src = RunSprite;
+				this.current_sprite = player_sprites["SPRINT"];
 				this.mov_x = this.speed;
 				break;
 
 			case player_states.SPRINT_LEFT:
-				this.sprite.src = RunSprite;
+				this.current_sprite = player_sprites["SPRINT"];
 				this.mov_x = -this.speed;
 				break;
 
-			case player_states.JUMP_LEFT:
+			case player_states.JUMP_RIGHT:
+				this.current_sprite = player_sprites["JUMP"];
 				this._jump();
 				break;
 
-			case player_states.JUMP_RIGHT:
+			case player_states.JUMP_LEFT:
+				this.current_sprite = player_sprites["JUMP"];
 				this._jump();
 				break;
 
 			default:
-				this.sprite.src = IdleSprite;
+				this.current_sprite = player_sprites["IDLE"];
 		}
 		
 		// Check the player's facing direction and apply scaling if facing left
@@ -104,10 +124,10 @@ export default class Player {
 			context.save(); // Save the current canvas state
 			context.scale(-1, 1); // Flip horizontally
 			const flippedX = -this.x - this.width; // Adjust the x-coordinate for flipping
-			context.drawImage( this.sprite, this.frame, 68, this.sprite_width, this.sprite_height, flippedX, this.y, this.width, this.height);
+			context.drawImage( this.sprite, this.frame, this.current_sprite.y_offset, this.sprite_width, this.sprite_height, flippedX, this.y, this.width, this.height);
 			context.restore(); // Restore the canvas state
 		} else {
-			context.drawImage( this.sprite, this.frame, 68, this.sprite_width, this.sprite_height, this.x, this.y, this.width, this.height);
+			context.drawImage( this.sprite, this.frame, this.current_sprite.y_offset, this.sprite_width, this.sprite_height, this.x, this.y, this.width, this.height);
 		}
 		
 		// Draw the player's hitbox
@@ -118,35 +138,34 @@ export default class Player {
 	
 	update() {
 		this.counter++;
-		
+
 		// Handle horizontal movement
 		this.x += this.mov_x;
-		if (this.counter % this.frame_speed == 0) this.frame += 200;
+		if (this.counter % this.frame_speed == 0) this.frame += this.current_sprite.x_offset;
 		
-		if (this.frame > 1520) this.frame = 70;
-
-
+		if (this.frame > this.current_sprite.last_frame) this.frame = this.current_sprite.first_frame;
+		
+		
 		if (!this.on_ground()) {
-			console.log("Player is not on ground!");
-			this.y += 2;
+			this.y += this.gravity;
 		}
-
-
+		
+		
 		// Vertical movement
 		if (this.is_jumping) {
 			this.y -= this.jump_offset;
-			this.jump_offset -= 0.5;
-
-			if (this.jump_offset <= 0) {
+			this.jump_offset -= 10 / this.jump_height;
+			
+			if (this.jump_offset <= -this.j_offset) {
 				this.is_jumping = false;
 				this.jump_offset = this.j_offset;
+				this.speed = 10;
 			};
 		};
-
-
 		
-		// Boundaries
-		/* if (this.x <= 0) this.x = 0;
-		if (this.x >= (this.canvas.width - player_utils.width)) this.x = this.canvas.width - player_utils.width; */
+		// Surface boundaries
+		if (this.y > this.canvas.height - this.height - 100) this.y = this.canvas.height - this.height - 100;
+		
+		//console.log(this.state);
 	}
 }

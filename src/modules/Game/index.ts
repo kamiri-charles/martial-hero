@@ -28,27 +28,42 @@ export default class Game {
     // Draw bottom surface
     this.context.beginPath();
     this.context.fillStyle = "darkgreen";
-    this.context.fillRect(0, this.canvas.height - 100, this.canvas.width, this.canvas.height);
-    this.context.closePath();
-    
-    // Player controls
-    if (this.keys_pressed["ArrowRight"]) {
-      this.player.set_state(player_states.SPRINT_RIGHT);
-    } else if (this.keys_pressed["ArrowLeft"]) {
-      this.player.set_state(player_states.SPRINT_LEFT);
-    } else if (this.keys_pressed["ArrowUp"] && this.player.state.includes('left')) {
-      this.player.set_state(player_states.JUMP_LEFT);
-    } else if (this.keys_pressed["ArrowUp"] && this.player.state.includes('right')) {
-      this.player.set_state(player_states.JUMP_RIGHT);
-    } else {
-      this.player.set_state(player_states.IDLE_RIGHT);
-    };
-    
-    
-    // Draw player
-    this.player.draw(this.context);
-    this.player.update();
-    
-    requestAnimationFrame(() => this.run());
+    this.context.fillRect(
+      0,
+      this.canvas.height - 100,
+      this.canvas.width,
+      this.canvas.height
+      );
+      this.context.closePath();
+      
+      // Player controls
+      if (this.keys_pressed["ArrowRight"]) {
+        this.player.set_state(player_states.SPRINT_RIGHT);
+      } else if (this.keys_pressed["ArrowLeft"]) {
+        this.player.set_state(player_states.SPRINT_LEFT);
+      } else if (this.keys_pressed["ArrowUp"]) {
+        if (this.player.state.includes("left")) {
+          this.player.set_state(player_states.JUMP_LEFT);
+        } else if (this.player.state.includes("right")) {
+          this.player.set_state(player_states.JUMP_RIGHT);
+        }
+      } else {
+        if (this.player.state.includes("left")) {
+          this.player.set_state(player_states.IDLE_LEFT);
+        } else if (this.player.state.includes("right")) {
+          this.player.set_state(player_states.IDLE_RIGHT);
+        }
+      }
+       
+
+        
+
+      
+      // Draw player
+      this.player.draw(this.context);
+      this.player.update();
+      
+      requestAnimationFrame(() => this.run());
+    }
   }
-}
+  
