@@ -30,34 +30,34 @@ export default class Game {
     this.context.fillStyle = "darkgreen";
     this.context.fillRect(
       0,
-      this.canvas.height - 100,
+      this.canvas.height - 102,
       this.canvas.width,
       this.canvas.height
       );
       this.context.closePath();
       
       // Player controls
-      if (this.keys_pressed["ArrowRight"]) {
-        this.player.set_state(player_states.SPRINT_RIGHT);
-      } else if (this.keys_pressed["ArrowLeft"]) {
-        this.player.set_state(player_states.SPRINT_LEFT);
-      } else if (this.keys_pressed["ArrowUp"]) {
-        if (this.player.state.includes("left")) {
-          this.player.set_state(player_states.JUMP_LEFT);
-        } else if (this.player.state.includes("right")) {
-          this.player.set_state(player_states.JUMP_RIGHT);
-        }
-      } else {
-        if (this.player.state.includes("left")) {
-          this.player.set_state(player_states.IDLE_LEFT);
-        } else if (this.player.state.includes("right")) {
-          this.player.set_state(player_states.IDLE_RIGHT);
+      if (!this.player.is_jumping) {
+        if (this.keys_pressed["ArrowRight"]) {
+          this.player.set_state(player_states.SPRINT_RIGHT);
+        } else if (this.keys_pressed["ArrowLeft"]) {
+          this.player.set_state(player_states.SPRINT_LEFT);
+        } else if (this.keys_pressed["ArrowUp"]) {
+          if (this.player.state.includes("left")) {
+            this.player.set_state(player_states.JUMP_LEFT);
+          } else if (this.player.state.includes("right")) {
+            this.player.set_state(player_states.JUMP_RIGHT);
+          }
+        } else {
+          if (this.player.on_ground()) {
+            if (this.player.state.includes("left")) {
+              this.player.set_state(player_states.IDLE_LEFT);
+            } else if (this.player.state.includes("right")) {
+              this.player.set_state(player_states.IDLE_RIGHT);
+            }
+          }
         }
       }
-       
-
-        
-
       
       // Draw player
       this.player.draw(this.context);

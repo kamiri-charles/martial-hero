@@ -29,12 +29,13 @@ export default class Player {
 		x_offset: number;
 		y_offset: number;
 		first_frame: number;
-		last_frame: number;
 	};
+	horizontal_jump_speed: number;
 	
 	
 	constructor(canvas: HTMLCanvasElement) {
 		this.canvas = canvas;
+		this.state = player_states.IDLE_RIGHT;
 		this.counter = 0;
 		this.mov_x = 0;
 		
@@ -60,8 +61,8 @@ export default class Player {
 		this.j_offset = 10; // Should be equal to jump_offset
 		this.is_jumping = false;
 		this.gravity = 1;
+		this.horizontal_jump_speed = 1;
 		
-		this.state = player_states.IDLE_RIGHT;
 	}
 	
 	set_state(state: string) {
@@ -107,12 +108,24 @@ export default class Player {
 
 			case player_states.JUMP_RIGHT:
 				this.current_sprite = player_sprites["JUMP"];
+				this.mov_x = this.speed * this.horizontal_jump_speed;
 				this._jump();
 				break;
 
 			case player_states.JUMP_LEFT:
 				this.current_sprite = player_sprites["JUMP"];
+				this.mov_x = -this.speed * this.horizontal_jump_speed;
 				this._jump();
+				break;
+
+			case player_states.FALL_RIGHT:
+				this.current_sprite = player_sprites["FALL"];
+				this.mov_x = this.speed * this.horizontal_jump_speed;
+				break;
+
+			case player_states.FALL_LEFT:
+				this.current_sprite = player_sprites["FALL"];
+				this.mov_x = -this.speed * this.horizontal_jump_speed;
 				break;
 
 			default:
@@ -124,27 +137,28 @@ export default class Player {
 			context.save(); // Save the current canvas state
 			context.scale(-1, 1); // Flip horizontally
 			const flippedX = -this.x - this.width; // Adjust the x-coordinate for flipping
-			context.drawImage( this.sprite, this.frame, this.current_sprite.y_offset, this.sprite_width, this.sprite_height, flippedX, this.y, this.width, this.height);
+			context.drawImage(this.sprite, this.frame, this.current_sprite.y_offset, this.sprite_width, this.sprite_height, flippedX, this.y, this.width, this.height);
 			context.restore(); // Restore the canvas state
 		} else {
-			context.drawImage( this.sprite, this.frame, this.current_sprite.y_offset, this.sprite_width, this.sprite_height, this.x, this.y, this.width, this.height);
+			context.drawImage(this.sprite, this.frame, this.current_sprite.y_offset, this.sprite_width, this.sprite_height, this.x, this.y, this.width, this.height);
 		}
 		
 		// Draw the player's hitbox
-		context.strokeRect(this.x, this.y, this.width, this.height);
+		//context.strokeRect(this.x, this.y, this.width, this.height);
 		
 		context.closePath();
 	}
 	
 	update() {
 		this.counter++;
+		this.sprite.src = this.current_sprite.image;
 
 		// Handle horizontal movement
 		this.x += this.mov_x;
 		if (this.counter % this.frame_speed == 0) this.frame += this.current_sprite.x_offset;
 		
-		if (this.frame > this.current_sprite.last_frame) this.frame = this.current_sprite.first_frame;
-		
+		//if (this.frame > this.current_sprite.last_frame) this.frame = this.current_sprite.first_frame;
+		if (this.frame >= this.current_sprite.first_frame + (this.current_sprite.frames * this.current_sprite.x_offset)) this.frame = this.current_sprite.first_frame;
 		
 		if (!this.on_ground()) {
 			this.y += this.gravity;
@@ -155,17 +169,34 @@ export default class Player {
 		if (this.is_jumping) {
 			this.y -= this.jump_offset;
 			this.jump_offset -= 10 / this.jump_height;
+
+			// Set the player's state to falling if they reach the peak of their jump
+			if (this.jump_offset <= 0) {
+				if (this.state == player_states.JUMP_RIGHT) {
+					this.set_state(player_states.FALL_RIGHT);
+				}
+				else if (this.state == player_states.JUMP_LEFT) {
+					this.set_state(player_states.FALL_LEFT);
+				}
+			}
 			
 			if (this.jump_offset <= -this.j_offset) {
 				this.is_jumping = false;
 				this.jump_offset = this.j_offset;
-				this.speed = 10;
+				
+				// Reset the player's state to idle if they land on the ground
+				if (this.on_ground()) {
+					if (this.state == player_states.FALL_RIGHT) {
+						this.set_state(player_states.IDLE_RIGHT);
+					}
+					else if (this.state == player_states.FALL_LEFT) {
+						this.set_state(player_states.IDLE_LEFT);
+					}
+				}
 			};
 		};
 		
 		// Surface boundaries
 		if (this.y > this.canvas.height - this.height - 100) this.y = this.canvas.height - this.height - 100;
-		
-		//console.log(this.state);
 	}
 }

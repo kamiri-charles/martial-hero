@@ -1,6 +1,7 @@
 import IdleSprite from "../../assets/sprites/Idle.png";
 import RunSprite from "../../assets/sprites/Run.png";
 import JumpSprite from "../../assets/sprites/Jump.png";
+import FallSprite from "../../assets/sprites/Fall.png";
 
 export const player_sprites = {
   IDLE: {
@@ -10,7 +11,6 @@ export const player_sprites = {
     x_offset: 200,
     y_offset: 68,
     first_frame: 70,
-    last_frame: 1520,
   },
   
   SPRINT: {
@@ -20,7 +20,6 @@ export const player_sprites = {
     x_offset: 200,
     y_offset: 68,
     first_frame: 70,
-    last_frame: 1520,
   },
   JUMP: {
     name: "JUMP",
@@ -29,7 +28,14 @@ export const player_sprites = {
     x_offset: 200,
     y_offset: 68,
     first_frame: 70,
-    last_frame: 1520,
+  },
+  FALL: {
+    name: "FALL",
+    image: FallSprite,
+    frames: 2,
+    x_offset: 200,
+    y_offset: 68,
+    first_frame: 70,
   },
 };
 

@@ -5,4 +5,6 @@ export const player_states = {
   SPRINT_LEFT: "sprint_left",
   JUMP_LEFT: "jump_left",
   JUMP_RIGHT: "jump_right",
+  FALL_LEFT: "fall_left",
+  FALL_RIGHT: "fall_right",
 };
