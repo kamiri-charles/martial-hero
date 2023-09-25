@@ -128,6 +128,26 @@ export default class Player {
 				this.mov_x = -this.speed * this.horizontal_jump_speed;
 				break;
 
+			case player_states.ATTACK_1_LEFT:
+				this.current_sprite = player_sprites["ATTACK_1"];
+				this.mov_x = 0;
+				break;
+
+			case player_states.ATTACK_1_RIGHT:
+				this.current_sprite = player_sprites["ATTACK_1"];
+				this.mov_x = 0;
+				break;
+
+			case player_states.ATTACK_2_LEFT:
+				this.current_sprite = player_sprites["ATTACK_2"];
+				this.mov_x = 0;
+				break;
+
+			case player_states.ATTACK_2_RIGHT:
+				this.current_sprite = player_sprites["ATTACK_2"];
+				this.mov_x = 0;
+				break;
+
 			default:
 				this.current_sprite = player_sprites["IDLE"];
 		}
@@ -144,7 +164,7 @@ export default class Player {
 		}
 		
 		// Draw the player's hitbox
-		//context.strokeRect(this.x, this.y, this.width, this.height);
+		context.strokeRect(this.x, this.y, this.width, this.height);
 		
 		context.closePath();
 	}

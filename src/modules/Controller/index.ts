@@ -10,11 +10,8 @@ export default class Controller {
     this.keys_pressed = {};
 
     // Event listeners
-    window.addEventListener(
-      "keydown",
-      (e) => (this.keys_pressed[e.key] = true)
-    );
-    window.addEventListener("keyup", (e) => (this.keys_pressed[e.key] = false));
+    window.addEventListener("keydown", e => (this.keys_pressed[e.key] = true));
+    window.addEventListener("keyup", e => (this.keys_pressed[e.key] = false));
   }
 
   // Player controls
